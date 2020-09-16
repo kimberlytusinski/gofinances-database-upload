@@ -14,13 +14,18 @@ interface Request {
 }
 
 class CreateTransactionService {
-  public async execute({title, value, type, category}: Request): Promise<Transaction> {
+  public async execute({
+    title,
+    value,
+    type,
+    category,
+  }: Request): Promise<Transaction> {
     const transactionsRepository = getCustomRepository(TransactionsRepository);
     const categoryRepository = getRepository(Category);
 
     const { total } = await transactionsRepository.getBalance();
 
-    if( type == 'outcome' && total < value) {
+    if (type === 'outcome' && total < value) {
       throw new AppError('You do not have enough balance.');
     }
 
@@ -30,7 +35,7 @@ class CreateTransactionService {
       },
     });
 
-    if(!transactionCategory) {
+    if (!transactionCategory) {
       transactionCategory = categoryRepository.create({
         title: category,
       });
